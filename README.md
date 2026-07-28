@@ -81,7 +81,7 @@ npm run dev
 
 ## Status
 
-- [1] Repo scaffolding (`package.json`, Next.js init)
+- [] Repo scaffolding (`package.json`, Next.js init)
 - [ ] Schema + types defined (`lib/schema.ts`)
 - [ ] `LocalStore` implementation
 - [ ] Generate flow (`lib/ai/generate.ts`) with schema validation
