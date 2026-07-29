@@ -103,7 +103,7 @@ npm run dev
 
 ## Status
 
-- [ ] Repo scaffolding (`package.json`, Next.js init)
+- [x] Repo scaffolding (`package.json`, Next.js init)
 - [ ] Schema + types defined (`lib/schema.ts`)
 - [ ] `LocalStore` implementation
 - [ ] Design token pre-step (`lib/ai/tokens.ts`)
