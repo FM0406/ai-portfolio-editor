@@ -1,0 +1,37 @@
+# Dependencies
+/node_modules
+
+# Next.js build output
+/.next/
+/out/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build/Cache artifacts
+/build
+.turbo
+*.tsbuildinfo
+next-env.d.ts
+
+# Logs
+*.log
+
+# OS-specific junk
+.DS_Store
+
+# Editor / AI tool settings
+.idea
+.vscode
+.cursorrules
+.cursorignore
+*.swp
+*.swo
+*.vim
+
+# Vercel
+.vercel
