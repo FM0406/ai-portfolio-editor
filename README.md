@@ -105,7 +105,7 @@ npm run dev
 
 - [x] Repo scaffolding (`package.json`, Next.js init)
 - [x] Schema + types defined (`lib/schema.ts`)
-- [ ] `LocalStore` implementation
+- [x] `LocalStore` implementation
 - [ ] Design token pre-step (`lib/ai/tokens.ts`)
 - [ ] Generate flow (`lib/ai/generate.ts`) with schema validation
 - [ ] Preview renderer (spec → live components)
