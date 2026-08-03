@@ -18,6 +18,8 @@ Honestly, the UI is the easy part. What I actually spent time thinking about is 
 - **`generate.ts`** does the open-ended work — take a loose prompt and produce a full site spec in one go. It's schema-constrained through tool use, so the model isn't just typing out JSON and hoping it's valid; it's filling in a typed shape (`Block`, `PageLayout`, `Portfolio`) that gets checked against a Zod schema right after. A few-shot prompt helps keep the tone and layout choices from feeling random from one generation to the next.
 - **`refine.ts`** is the harder one. It gets the existing spec plus something short like "make the hero bigger," and has to figure out which piece of an already-built site that's even talking about, then change just that piece without touching anything else. Edit, don't regenerate, is really the whole idea the project is built around.
 
+Both of those, along with `tokens.ts`, go through one shared file, `client.ts` — a thin layer that hides which actual LLM backend is answering. Locally that's Ollama (free, no API key, good for iterating without burning tokens); in real use it's swapped to Anthropic via a single environment variable, with no changes needed in `tokens.ts`, `generate.ts`, or `refine.ts` themselves.
+
 Put those two side by side and it's basically a little case study in prompting the same model for two very different jobs — one wide open, one narrow and careful — against one shared schema.
 
 ### Keeping things from all looking the same
@@ -35,10 +37,15 @@ Nothing in the AI logic or the UI talks directly to a database or an API — eve
 
 I kept that interface generic on purpose, not tied to any of `LocalStore`'s internal details, so a different persistence backend could implement it down the line without touching the AI logic or the UI at all. There's no such adapter here yet — this project is meant to stand on its own for now — but the door's left open for later.
 
+The same idea applies on the AI side: `client.ts` is the equivalent boundary for which model answers, rather than where data lives.
+
 ## Architecture
 
 ```
 User prompt
+    │
+    ▼
+lib/ai/client.ts     ── shared LLM call layer; swaps Ollama (local/dev) vs Anthropic (real) via env var
     │
     ▼
 lib/ai/tokens.ts     ── picks a palette / font pairing / layout direction before generating
@@ -66,7 +73,7 @@ lib/ai/refine.ts       ── existing spec + instruction → a targeted diff, n
 
 - Next.js / React (frontend + API routes)
 - TypeScript throughout, schema checked with Zod
-- LLM: schema-constrained tool use (model still TBD)
+- LLM: schema-constrained tool use (model still TBD), provider-swappable via `client.ts` (Ollama locally, Anthropic for real generation)
 - Local persistence: in-memory / lightweight local store, no external DB needed
 
 ## Project structure
@@ -75,6 +82,7 @@ lib/ai/refine.ts       ── existing spec + instruction → a targeted diff, n
 ai-portfolio-editor/
 ├── lib/
 │   ├── ai/
+│   │   ├── client.ts         # shared LLM call layer, swaps provider via env var
 │   │   ├── tokens.ts         # picks palette/font/layout direction before generating
 │   │   ├── generate.ts       # prompt -> JSON site spec
 │   │   └── refine.ts         # existing spec + instruction -> targeted diff
@@ -95,7 +103,7 @@ ai-portfolio-editor/
 git clone <repo-url>
 cd ai-portfolio-editor
 npm install
-cp .env.example .env.local   # add your LLM API key
+cp .env.example .env.local   # add your LLM API key (not required if using Ollama locally)
 npm run dev
 ```
 
@@ -106,6 +114,7 @@ npm run dev
 - [x] Repo scaffolding (`package.json`, Next.js init)
 - [x] Schema + types defined (`lib/schema.ts`)
 - [x] `LocalStore` implementation
+- [ ] Shared LLM client (`lib/ai/client.ts`)
 - [ ] Design token pre-step (`lib/ai/tokens.ts`)
 - [ ] Generate flow (`lib/ai/generate.ts`) with schema validation
 - [ ] Preview renderer (spec → live components)
