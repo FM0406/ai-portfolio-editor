@@ -1,8 +1,12 @@
 {
   "dependencies": {
+    "@ai-sdk/anthropic": "^4.0.28",
+    "ai": "^7.0.50",
+    "ai-sdk-ollama": "^4.1.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@types/node": "^26.1.2",
     "tsx": "^4.23.1"
   }
 }
